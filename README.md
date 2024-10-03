@@ -63,7 +63,7 @@ else if (wallpapersSubfolder3 != null && wallpapersSubfolder3.length > 0) {
 	return wallpapersSubfolder3[0];
 }
 ```
-5. At changeWallpaper\(\), change the following section to match schancesToSubfolder`s and the respective numbers:
+5. At changeWallpaper\(\), change the following section to match chancesToSubfolder`s and the respective numbers:
 ```java
 if (randomNumber <= chanceToSubfolder1) {
 	wallpaperFolder += subfolder1;
