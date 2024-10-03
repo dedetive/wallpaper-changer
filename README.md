@@ -41,3 +41,36 @@ Paths must have double backslashes.
 - chanceToSubfolder1 is the chance for the random number generator to pick a file from subfolder1.
 - chanceToSubfolder2 is the chance for the random number generator to pick a file from subfolder2. This means there's 20% to be a file in subfolder1, 40% in subfolder2 and the remaining 40% in subfolder3.
 - changeIntervalMS is the default interval in milliseconds to change the wallpaper. Ctrl + Alt + 2 and 8 may affect this.
+
+To change the number of subfolders, you must:
+1. Copy a subfolder\{number\} and add (or remove) a number to it.
+2. At main\(\) function, at "list" case, add (or remove) these lines with the respective subfolder number.
+```java
+System.out.println("\n  " + subfolder3 + " \n");
+listWallpapers(subfolder3);
+```
+3. At isWallpaperFile\(\), add (or remove) the following section with the respective number:
+```java
+ || isFileInFolder(subfolder3, filename)
+```
+4. At findWallpaperFile\(\), add (or remove) the following sections with the respective numbers where they appear:
+```java
+File[] wallpapersSubfolder3 = new File(wallpaperFolderParent + subfolder3).listFiles((_, name) -> name.equalsIgnoreCase(filename));
+```
+and 
+```java
+else if (wallpapersSubfolder3 != null && wallpapersSubfolder3.length > 0) {
+	return wallpapersSubfolder3[0];
+}
+```
+5. At changeWallpaper\(\), change the following section to match schancesToSubfolder`s and the respective numbers:
+```java
+if (randomNumber <= chanceToSubfolder1) {
+	wallpaperFolder += subfolder1;
+} else if (randomNumber <= chanceToSubfolder2) {
+	wallpaperFolder += subfolder2;
+} else {
+	wallpaperFolder += subfolder3;
+}
+```
+6. Make sure the subfolder paths are correct.
