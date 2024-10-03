@@ -21,56 +21,43 @@ Ctrl + Alt + LETTER commands work even if the app is not focused.
 
 To customize the program for your own use case, you must edit the first few lines of variables and, to change the number of subfolders, alter a few command lines.
 ```java
-	private static String wallpaperFolder = "C:\\Users\\ded\\Pictures\\wallpapers\\good_wallpapers";
-	private static final String subfolder1 = "\\decent_wallpapers";
-	private static final String subfolder2 = "\\good_wallpapers";
-	private static final String subfolder3 = "\\amazing_wallpapers";
+private static String wallpaperFolder = "C:\\Users\\ded\\Pictures\\wallpapers\\good_wallpapers";
+	private static final List<String> subfolders = Arrays.asList(new String[]{
+		"\\decent_wallpapers",      // Here is where you must manipulate subfolders
+		"\\good_wallpapers",
+		"\\amazing_wallpapers"
+	});
 	private static final String defaultWallpaperPath = "C:\\Users\\ded\\Pictures\\wallpapers\\rabbito.jpg";
-	private static final double chanceToSubfolder1 = 0.2; // These must be between 0 and 1
-	private static final double chanceToSubfolder2 = 0.6; // This must be higher than chanceToSubfolder1
-	private static int changeIntervalMS = 600000; // Change wallpaper every ten minutes (600000 ms)
+	private static final List<Double> chanceToSubfolders = Arrays.asList(new Double[]{
+		0.25,   	  // These values must be between 0 and 1
+		0.6,    	  // All numbers must be in order, and it reflects directly the chance of the respective subfolder
+		1.0       	  // The last number must always be 1.0, otherwise code will break given the right circumstances
+	});		          // Also the number of elements in this list must always be equal to the number of subfolders
+	private static int changeIntervalMS = 600000; // Changes wallpaper every ten minutes (600000 ms)
 ```
 
 Paths must have double backslashes.
 
 - wallpaperFolder is the path to the folder that contains subfolders with the images.
-- subfolder1 is the first subfolder within wallpaperFolder.
-- subfolder2 is the second subfolder.
-- subfolder3 is the third subfolder.
+- subfolders are the subfolders within wallpaperFolder.
 - defaultWallpaperPath is the full path to where the default picture is located. It must be a file.
-- chanceToSubfolder1 is the chance for the random number generator to pick a file from subfolder1.
-- chanceToSubfolder2 is the chance for the random number generator to pick a file from subfolder2. This means there's 20% to be a file in subfolder1, 40% in subfolder2 and the remaining 40% in subfolder3.
+- chanceToSubfolders are the chances for the random number generator to pick a file from the first subfolder in subfolders. This case means there's a 25% \(0.25 * 100%\) to be a file in subfolders\[0\], 35% \(\(0.6 - 0.25\) * 100%\) to be a file in subfolders\[1\] and lastly the ramaining 40% \(\(1.0 - 0.6\) * 100%\) to be a file in subfolders\[2\].
 - changeIntervalMS is the default interval in milliseconds to change the wallpaper. Ctrl + Alt + 2 and 8 may affect this.
 
 To change the number of subfolders, you must:
-1. Copy a subfolder\{number\} and add (or remove) a number to it.
-2. At main\(\) function, at "list" case, add (or remove) these lines with the respective subfolder number.
+1. In the parameters section at the top of the code, change \\decent_wallpapers, \\good_wallpapers and \\amazing_wallpapers to whatever subfolder names you'd like. There must be double backslashes.
 ```java
-System.out.println("\n  " + subfolder3 + " \n");
-listWallpapers(subfolder3);
+private static final List<String> subfolders = Arrays.asList(new String[]{
+	"\\decent_wallpapers",      // Here is where you must manipulate subfolders
+	"\\good_wallpapers",
+	"\\amazing_wallpapers"
+});
 ```
-3. At isWallpaperFile\(\), add (or remove) the following section with the respective number:
+2. Also, change the chanceToSubfolders to match whatever chances you'd like. The last number must be 1.0. The values must be between 0 and 1. 0.25 means 25%, 0.6 means 35% because the first 25% were already taken and thus the third subfolder will have 100% - (35% + 25%), or 40%. If you want the same chance for every subfolder, do increments of 1/subfolderCount and keep the last as 1.0.
 ```java
- || isFileInFolder(subfolder3, filename)
+private static final List<Double> chanceToSubfolders = Arrays.asList(new Double[]{
+			0.25,     // These values must be between 0 and 1
+			0.6,      // All numbers must be in order, and it reflects directly the chance of the respective subfolder
+			1.0       // The last number must always be 1.0, otherwise code will break given the right circumstances
+	});		          // Also the number of elements in this list must always be equal to the number of subfolders
 ```
-4. At findWallpaperFile\(\), add (or remove) the following sections with the respective numbers where they appear:
-```java
-File[] wallpapersSubfolder3 = new File(wallpaperFolderParent + subfolder3).listFiles((_, name) -> name.equalsIgnoreCase(filename));
-```
-and 
-```java
-else if (wallpapersSubfolder3 != null && wallpapersSubfolder3.length > 0) {
-	return wallpapersSubfolder3[0];
-}
-```
-5. At changeWallpaper\(\), change the following section to match chancesToSubfolder`s and the respective numbers:
-```java
-if (randomNumber <= chanceToSubfolder1) {
-	wallpaperFolder += subfolder1;
-} else if (randomNumber <= chanceToSubfolder2) {
-	wallpaperFolder += subfolder2;
-} else {
-	wallpaperFolder += subfolder3;
-}
-```
-6. Make sure the subfolder paths are correct.
