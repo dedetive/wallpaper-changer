@@ -1,7 +1,7 @@
 # Wallpaper Changer
 A program that changes your wallpaper, with some tweaks.
 
-This was made by me because I'm not allowed to have whatever wallpaper I wish to have because of strict parenting, so it's centered around having a default wallpaper that i'm allowed to use and those within the good_wallpapers folder are those i'm not allowed to use.
+This was made by me because I'm not allowed to have whatever wallpaper I wish to have because of strict parenting, so it's centered around having a default wallpaper that I'm allowed to use and those within the good_wallpapers folder are those I'm not allowed to use.
 This only supports .png and .jpg, although it's fairly easy to implement other image extensions. I, however, did not test it.
 
 This program can change your wallpaper by picking random files from one or more folders, with a specific weight by subfolder. These are the available commands:
