@@ -54,6 +54,8 @@ public class WallpaperChanger extends Thread implements NativeKeyListener {
 			while (true) {
 				String input = scanner.nextLine();
 
+				// CHANGE HERE FOR SUBFOLDERS
+
 				if (input.equalsIgnoreCase("list")) {
 					System.out.println("\n  " + subfolder1 + " \n");
 					listWallpapers(subfolder1);
@@ -61,6 +63,9 @@ public class WallpaperChanger extends Thread implements NativeKeyListener {
 					listWallpapers(subfolder2);
 					System.out.println("\n  " + subfolder3 + " \n");
 					listWallpapers(subfolder3);
+
+				// END CHANGE
+
 				} else {
 					if (isWallpaperFile(input)) {
 						System.out.println("Changing wallpaper to: " + input);
@@ -121,7 +126,12 @@ public class WallpaperChanger extends Thread implements NativeKeyListener {
 	}
 
 	private static boolean isWallpaperFile(String filename) {
+
+		// CHANGE HERE FOR SUBFOLDERS
+
 		return isFileInFolder(subfolder1, filename) || isFileInFolder(subfolder2, filename) || isFileInFolder(subfolder3, filename);
+
+		// END
 	}
 
 	private static boolean isFileInFolder(String subfolder, String filename) {
@@ -150,9 +160,14 @@ public class WallpaperChanger extends Thread implements NativeKeyListener {
 	}
 
 	private static File findWallpaperFile(String filename) {
+
+		// CHANGE HERE FOR SUBFOLDERS
+
 		File[] wallpapersSubfolder1 = new File(wallpaperFolderParent + subfolder1).listFiles((_, name) -> name.equalsIgnoreCase(filename));
 		File[] wallpapersSubfolder2 = new File(wallpaperFolderParent + subfolder2).listFiles((_, name) -> name.equalsIgnoreCase(filename));
 		File[] wallpapersSubfolder3 = new File(wallpaperFolderParent + subfolder3).listFiles((_, name) -> name.equalsIgnoreCase(filename));
+
+		// ALSO CHANGE HERE
 
 		if (wallpapersSubfolder1 != null && wallpapersSubfolder1.length > 0) {
 			return wallpapersSubfolder1[0];
@@ -161,6 +176,9 @@ public class WallpaperChanger extends Thread implements NativeKeyListener {
 		} else if (wallpapersSubfolder3 != null && wallpapersSubfolder3.length > 0) {
 			return wallpapersSubfolder3[0];
 		}
+
+		// END
+
 		return null;
 	}
 
@@ -218,6 +236,9 @@ public class WallpaperChanger extends Thread implements NativeKeyListener {
 
 	private static void changeWallpaper() {
 		if (!defaultMode) {
+
+			// CHANGE HERE FOR SUBFOLDERS
+
 			double randomNumber = Math.random();
 			if (randomNumber <= chanceToSubfolder1) {
 				wallpaperFolder += subfolder1;
@@ -226,6 +247,8 @@ public class WallpaperChanger extends Thread implements NativeKeyListener {
 			} else {
 				wallpaperFolder += subfolder3;
 			}
+
+			// END
 
 			File wallpaperDirectory = new File(wallpaperFolder);
 			File[] files = wallpaperDirectory.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".png"));
