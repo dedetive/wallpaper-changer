@@ -7,6 +7,8 @@ import com.sun.jna.Native;
 import com.sun.jna.win32.W32APIOptions;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.time.LocalTime;
 import java.util.*;
 
 public class WallpaperChanger extends Thread implements NativeKeyListener {
@@ -28,13 +30,18 @@ public class WallpaperChanger extends Thread implements NativeKeyListener {
 	 */
 
 	private static String wallpaperFolder = "C:\\Users\\ded\\Pictures\\wallpapers\\good_wallpapers";
-	private static final String subfolder1 = "\\decent_wallpapers";
-	private static final String subfolder2 = "\\good_wallpapers";
-	private static final String subfolder3 = "\\amazing_wallpapers";
+	private static final List<String> subfolders = Arrays.asList(new String[]{
+			"\\decent_wallpapers",      // Here is where you must manipulate subfolders
+			"\\good_wallpapers",
+			"\\amazing_wallpapers"
+	});
 	private static final String defaultWallpaperPath = "C:\\Users\\ded\\Pictures\\wallpapers\\rabbito.jpg";
-	private static final double chanceToSubfolder1 = 0.2; // These must be between 0 and 1
-	private static final double chanceToSubfolder2 = 0.6; // This must be higher than chanceToSubfolder1
-	private static int changeIntervalMS = 600000; // Change wallpaper every ten minutes (600000 ms)
+	private static final List<Double> chanceToSubfolders = Arrays.asList(new Double[]{
+			0.25,     // These values must be between 0 and 1
+			0.6,      // All numbers must be in order, and it reflects directly the chance of the respective subfolder
+			1.0       // The last number must always be 1.0, otherwise code will break given the right circumstances
+	});		          // Also the number of elements in this list must always be equal to the number of subfolders
+	private static int changeIntervalMS = 600000; // Changes wallpaper every ten minutes (600000 ms)
 
 	// END PARAMETERS
 
@@ -54,17 +61,11 @@ public class WallpaperChanger extends Thread implements NativeKeyListener {
 			while (true) {
 				String input = scanner.nextLine();
 
-				// CHANGE HERE FOR SUBFOLDERS
-
 				if (input.equalsIgnoreCase("list")) {
-					System.out.println("\n  " + subfolder1 + " \n");
-					listWallpapers(subfolder1);
-					System.out.println("\n  " + subfolder2 + " \n");
-					listWallpapers(subfolder2);
-					System.out.println("\n  " + subfolder3 + " \n");
-					listWallpapers(subfolder3);
-
-				// END CHANGE
+					for (String subfolder : subfolders) {
+						System.out.println("\n  " + subfolder + " \n");
+						listWallpapers(subfolder);
+					}
 
 				} else {
 					if (isWallpaperFile(input)) {
@@ -127,11 +128,13 @@ public class WallpaperChanger extends Thread implements NativeKeyListener {
 
 	private static boolean isWallpaperFile(String filename) {
 
-		// CHANGE HERE FOR SUBFOLDERS
+		for (String subfolder : subfolders) {
+			if (isFileInFolder(subfolder, filename)) {
+				return true;
+			}
+		}
+		return false;
 
-		return isFileInFolder(subfolder1, filename) || isFileInFolder(subfolder2, filename) || isFileInFolder(subfolder3, filename);
-
-		// END
 	}
 
 	private static boolean isFileInFolder(String subfolder, String filename) {
@@ -149,7 +152,7 @@ public class WallpaperChanger extends Thread implements NativeKeyListener {
 				System.err.println("Failed to update the wallpaper with " + filename + " ");
 			} else {
 				System.out.println("Wallpaper updated to " + filename + " successfully at " +
-						(String.valueOf(java.time.LocalTime.now())).substring(0, 8) + ". `");
+						(String.valueOf(LocalTime.now())).substring(0, 8) + ". `");
 				if (!isFrozen) {
 					resetWallpaperTimer(changeIntervalMS);
 				}
@@ -161,24 +164,12 @@ public class WallpaperChanger extends Thread implements NativeKeyListener {
 
 	private static File findWallpaperFile(String filename) {
 
-		// CHANGE HERE FOR SUBFOLDERS
-
-		File[] wallpapersSubfolder1 = new File(wallpaperFolderParent + subfolder1).listFiles((_, name) -> name.equalsIgnoreCase(filename));
-		File[] wallpapersSubfolder2 = new File(wallpaperFolderParent + subfolder2).listFiles((_, name) -> name.equalsIgnoreCase(filename));
-		File[] wallpapersSubfolder3 = new File(wallpaperFolderParent + subfolder3).listFiles((_, name) -> name.equalsIgnoreCase(filename));
-
-		// ALSO CHANGE HERE
-
-		if (wallpapersSubfolder1 != null && wallpapersSubfolder1.length > 0) {
-			return wallpapersSubfolder1[0];
-		} else if (wallpapersSubfolder2 != null && wallpapersSubfolder2.length > 0) {
-			return wallpapersSubfolder2[0];
-		} else if (wallpapersSubfolder3 != null && wallpapersSubfolder3.length > 0) {
-			return wallpapersSubfolder3[0];
+		for (String subfolder : subfolders) {
+			File[] wallpapersSubfolder = new File(wallpaperFolderParent + subfolder).listFiles((_, name) -> name.equalsIgnoreCase(filename));
+			if (wallpapersSubfolder != null && wallpapersSubfolder.length > 0) {
+				return wallpapersSubfolder[0];
+			}
 		}
-
-		// END
-
 		return null;
 	}
 
@@ -237,18 +228,16 @@ public class WallpaperChanger extends Thread implements NativeKeyListener {
 	private static void changeWallpaper() {
 		if (!defaultMode) {
 
-			// CHANGE HERE FOR SUBFOLDERS
-
 			double randomNumber = Math.random();
-			if (randomNumber <= chanceToSubfolder1) {
-				wallpaperFolder += subfolder1;
-			} else if (randomNumber <= chanceToSubfolder2) {
-				wallpaperFolder += subfolder2;
-			} else {
-				wallpaperFolder += subfolder3;
-			}
 
-			// END
+			int index = 0;
+			for (Double chance : chanceToSubfolders) {
+				if (randomNumber <= chance) {
+					wallpaperFolder += subfolders.get(index);
+					break;
+				}
+				index += 1;
+			}
 
 			File wallpaperDirectory = new File(wallpaperFolder);
 			File[] files = wallpaperDirectory.listFiles((dir, name) -> name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".png"));
@@ -271,7 +260,7 @@ public class WallpaperChanger extends Thread implements NativeKeyListener {
 					System.err.println("Failed to update the wallpaper with " + selectedFile.getName());
 				} else {
 					System.out.println("Wallpaper updated to " + selectedFile.getName() + " successfully at " +
-							(String.valueOf(java.time.LocalTime.now())).substring(0, 8) + ".");
+							(String.valueOf(LocalTime.now())).substring(0, 8) + ".");
 				}
 			} else {
 				System.err.println("No valid images found in the wallpaper folder.");
