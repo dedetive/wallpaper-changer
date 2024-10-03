@@ -33,11 +33,11 @@ To customize the program for your own use case, you must edit the first few line
 
 Paths must have double backslashes.
 
-wallpaperFolder is the path to the folder that contains subfolders with the images.
-subfolder1 is the first subfolder within wallpaperFolder.
-subfolder2 is the second subfolder.
-subfolder3 is the third subfolder.
-defaultWallpaperPath is the full path to where the default picture is located. It must be a file.
-chanceToSubfolder1 is the chance for the random number generator to pick a file from subfolder1.
-chanceToSubfolder2 is the chance for the random number generator to pick a file from subfolder2. This means there's 20% to be a file in subfolder1, 40% in subfolder2 and the remaining 40% in subfolder3.
-changeIntervalMS is the default interval in milliseconds to change the wallpaper. Ctrl + Alt + 2 and 8 may affect this.
+- wallpaperFolder is the path to the folder that contains subfolders with the images.
+- subfolder1 is the first subfolder within wallpaperFolder.
+- subfolder2 is the second subfolder.
+- subfolder3 is the third subfolder.
+- defaultWallpaperPath is the full path to where the default picture is located. It must be a file.
+- chanceToSubfolder1 is the chance for the random number generator to pick a file from subfolder1.
+- chanceToSubfolder2 is the chance for the random number generator to pick a file from subfolder2. This means there's 20% to be a file in subfolder1, 40% in subfolder2 and the remaining 40% in subfolder3.
+- changeIntervalMS is the default interval in milliseconds to change the wallpaper. Ctrl + Alt + 2 and 8 may affect this.
