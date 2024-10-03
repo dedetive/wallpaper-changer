@@ -9,7 +9,7 @@ import com.sun.jna.win32.W32APIOptions;
 import java.io.File;
 import java.util.*;
 
-public class WallpaperGoodEnding extends Thread implements NativeKeyListener {
+public class WallpaperChanger extends Thread implements NativeKeyListener {
 	private static Timer timer;
 	private static TimerTask wallpaperTask;
 
@@ -46,7 +46,7 @@ public class WallpaperGoodEnding extends Thread implements NativeKeyListener {
 
 	public static void main(String[] args) {
 
-		WallpaperGoodEnding thread = new WallpaperGoodEnding();
+		WallpaperChanger thread = new WallpaperChanger();
 		thread.start();
 
 		new Thread(() -> {
@@ -183,7 +183,7 @@ public class WallpaperGoodEnding extends Thread implements NativeKeyListener {
 			e.printStackTrace();
 			System.exit(-1);
 		}
-		GlobalScreen.addNativeKeyListener(new WallpaperGoodEnding());
+		GlobalScreen.addNativeKeyListener(new WallpaperChanger());
 	}
 
 	private static void startWallpaperTimer() {
